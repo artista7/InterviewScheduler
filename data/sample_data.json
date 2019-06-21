@@ -10,20 +10,7 @@
             "profile_name": "profile #1",
             "profile_id": 1,
             "interview_start_time": 0,
-            "shortlisted_candidates": [
-                {
-                    "candidate_id": 0,
-                    "start_time": null,
-                    "end_time": null,
-                    "status": "PENDING"
-                },
-                {
-                    "candidate_id": 1,
-                    "start_time": null,
-                    "end_time": null,
-                    "status": "PENDING"
-                }
-            ]
+            "shortlisted_candidates": []
         },
         {
             "profile_name": "profile #2",
@@ -31,25 +18,7 @@
             "interview_start_time": 0,
             "shortlisted_candidates": [
                 {
-                    "candidate_id": 0,
-                    "start_time": null,
-                    "end_time": null,
-                    "status": "PENDING"
-                },
-                {
-                    "candidate_id": 1,
-                    "start_time": null,
-                    "end_time": null,
-                    "status": "PENDING"
-                },
-                {
                     "candidate_id": 2,
-                    "start_time": null,
-                    "end_time": null,
-                    "status": "PENDING"
-                },
-                {
-                    "candidate_id": 6,
                     "start_time": null,
                     "end_time": null,
                     "status": "PENDING"
@@ -60,50 +29,17 @@
     "candidates": [
         {
             "candidate_id": 0,
-            "profile_preference": [1, 2]
+            "profile_preference": []
         },
         {
             "candidate_id": 1,
-            "profile_preference": [
-                1,
-                2
-            ]
+            "profile_preference": []
         },
         {
             "candidate_id": 2,
             "profile_preference": [
                 2
             ]
-        },
-        {
-            "candidate_id": 3,
-            "profile_preference": []
-        },
-        {
-            "candidate_id": 4,
-            "profile_preference": []
-        },
-        {
-            "candidate_id": 5,
-            "profile_preference": []
-        },
-        {
-            "candidate_id": 6,
-            "profile_preference": [
-                2
-            ]
-        },
-        {
-            "candidate_id": 7,
-            "profile_preference": []
-        },
-        {
-            "candidate_id": 8,
-            "profile_preference": []
-        },
-        {
-            "candidate_id": 9,
-            "profile_preference": []
         }
     ]
 }

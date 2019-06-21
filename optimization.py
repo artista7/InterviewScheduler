@@ -1,5 +1,5 @@
 from __future__ import print_function
-
+import time
 import collections
 import pickle
 from ortools.sat.python import cp_model
@@ -176,18 +176,20 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
     model.Minimize(obj_var)
 
 
-
+    start_time = time.time()
     # Solve model.
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = 10.0
     # status = solver.Solve(model)
     status = solver.SolveWithSolutionCallback(model, cp_model.ObjectiveSolutionPrinter())
+    total_time_taken = time.time() - start_time
 
     if status == cp_model.FEASIBLE or status == cp_model.OPTIMAL:
-        schedule = []
+        data = {"profiles" : [], "time_taken": total_time_taken}
         for profile_id in manager.profiles:
             profile = manager.profiles[profile_id]
-            profile_schedule = {"profile_id": profile_id, "schedule": []}
+            profile_schedule = {"profile_id": profile_id,
+                                "schedule": []}
             for interview in profile.get_all_interviews():
                 start_time = solver.Value(interview.start_time)
                 end_time = solver.Value(interview.end_time)
@@ -195,8 +197,8 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
                 profile_schedule["schedule"].append({"candidate_id": candidate_id,
                                                  "start_time": start_time,
                                                  "end_time": end_time})
-            schedule.append(profile_schedule)
-        return schedule
+            data["profiles"].append(profile_schedule)
+        return data
     else:
         return {}
 

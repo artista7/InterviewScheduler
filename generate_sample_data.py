@@ -83,4 +83,4 @@ def generate_data(num_candidates, num_profiles, profile_allocated_time):
     json.dump(data, open('data/sample_data.json', "w"), indent=4)
 
 if __name__ == '__main__':
-    generate_data(10, 3 , 15)
+    generate_data(3, 3 , 15)

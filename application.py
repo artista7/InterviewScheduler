@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 from optimization  import optimize_schedule
 application = Flask(__name__)
 cors = CORS(application)
-app.config['CORS_HEADERS'] = 'Content-Type'
+application.config['CORS_HEADERS'] = 'Content-Type'
 
 
 

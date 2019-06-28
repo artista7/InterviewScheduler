@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 
 const getInSchema = data => {
   const newData = [];
+  const candidatesMapping = {};
   const statusMapping = { 1: "PENDING", 2: "ONGOING", 3: "DONE" };
   const timeTransformer = time => {
     const [hour, minutes] = time.split(":");
@@ -18,6 +19,9 @@ const getInSchema = data => {
     newCompanyData.shortlisted_candidates = company.candidates.map(
       candidate => {
         const newCandidateData = {};
+        const prev = candidatesMapping[[candidate.candidateName]] || [];
+        prev.push(companyId);
+        candidatesMapping[[candidate.candidateName]] = prev;
         newCandidateData.candidate_id = candidate.candidateName;
         newCandidateData.start_time = timeTransformer(candidate.startTime);
         newCandidateData.end_time = timeTransformer(candidate.endTime);
@@ -30,15 +34,22 @@ const getInSchema = data => {
     newCompanyData.interview_start_time = timeTransformer(
       company.companyStartTime
     );
+
     newData.push(newCompanyData);
   });
-  return newData;
+  const candidatePreference = [];
+  Object.keys(candidatesMapping).map(candidateName => {
+    candidatePreference.push({
+      candidate_id: candidateName,
+      profile_preference: candidatesMapping[[candidateName]]
+    });
+  });
+  return { profiles: newData, candidates: candidatePreference };
 };
 
 export const OptimizeButton = props => {
   const clickHandler = event => {
     const newData = getInSchema(props.companyData);
-
     fetch(
       "http://scheduleoptimizer-dev.us-east-1.elasticbeanstalk.com/optimize",
       {

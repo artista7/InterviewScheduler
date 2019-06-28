@@ -1,3 +1,5 @@
+static/.cache/*
+static/node_modules/*
 old/*
 *__pycache__/*
 assets/*

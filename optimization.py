@@ -49,7 +49,7 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
 
             if candidate_status == PENDING_STATUS:
 
-                unique_id = '%i_%i' % (profile_id, candidate_id)
+                unique_id = '%s_%s' % (profile_id, candidate_id)
 
                 start_time = model.NewIntVar(interview_start_time,
                                         TIME_HORIZON,

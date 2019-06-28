@@ -4,7 +4,7 @@ from optimization  import optimize_schedule
 application = Flask(__name__)
 
 
-@application.route('/optimize')
+@application.route('/optimize', methods=['GET', 'PUT'])
 def optimize():
     schedule_data = request.get_json()
     optimized_schedule = optimize_schedule(schedule_data)

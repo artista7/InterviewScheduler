@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Company from "./components/company";
 import OptimizeButton from "./components/optimizeButton";
+import TimelineChart from "./components/timelineChart";
 import { addCompany } from "./actions";
 
 import ReactDOM from "react-dom";
@@ -40,26 +41,11 @@ class App extends Component {
         />
       );
     };
+
     return (
       <div>
-        <div
-          style={{
-            height: "90px",
-            background: "#466368",
-            background:
-              "linear-gradient(to right bottom, rgb(63, 81, 181), rgb(54, 63, 117))"
-          }}
-        >
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "200%",
-              fontFamily: "Barlow, sans-serif",
-              color: "#dddeff",
-              height: "100%",
-              display: "flex"
-            }}
-          >
+        <div className="top-nav-bar">
+          <div className="header-text-box">
             <div style={{ margin: "auto" }}>Interview Scheduler</div>
           </div>
         </div>
@@ -72,7 +58,7 @@ class App extends Component {
             createCompany(companyId, this.props.companies[companyId])
           )}
         </div>
-        <div style={{ display: "flex", width: "30%", margin: "auto" }}>
+        <div className="button-bar">
           <Button
             onClick={() => this.props.addCompany()}
             variant="contained"
@@ -81,10 +67,11 @@ class App extends Component {
           >
             Add Company
             <Icon style={{ marginLeft: "5px" }}>add</Icon>
-            {/* <DeleteIcon className={classes.rightIcon} /> */}
           </Button>
-
           <OptimizeButton />
+        </div>
+        <div style={{ width: "80%", display: "block", margin: "auto" }}>
+          <TimelineChart />
         </div>
       </div>
     );

@@ -57,12 +57,10 @@ export const companies = (state = initialState.companies, action) => {
       const newCompany = { ...initialCompanyState };
       newCompany.name = companyId;
       newCompany.companyId = companyId;
-      console.log(newCompany);
       const newState = {
         ...state,
         [companyId]: newCompany
       };
-      console.log(newState);
       return {
         ...state,
         [companyId]: newCompany
@@ -124,7 +122,6 @@ export const companies = (state = initialState.companies, action) => {
     }
     case CHANGE_CANDIDATE_NAME: {
       const { companyId, candidateId, candidateName } = action;
-      console.log(candidateName);
       const candidate = extractCandidate(companyId, candidateId, state);
       const newCandidate = { ...candidate, candidateName: candidateName };
       const newState = updateCandidate(companyId, candidateId, newCandidate, {

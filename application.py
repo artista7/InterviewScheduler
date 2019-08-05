@@ -1,18 +1,18 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from optimization  import optimize_schedule
+
 application = Flask(__name__)
+CORS(application)
 
 
-@application.route('/optimize', methods=['GET', 'PUT'])
+@application.route('/api/optimize', methods=['POST'])
 def optimize():
     schedule_data = request.get_json()
     optimized_schedule = optimize_schedule(schedule_data)
     return jsonify(optimized_schedule)
 
-@application.route('/')
-def hello():
-    return 'Hello, World!'
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0')
+    application.run(host='0.0.0.0', port=5000)

@@ -54,60 +54,12 @@ class TimelineChart extends React.Component {
   constructor(props) {
     super(props);
     this.data = [];
-    console.log(props);
     for (let i = 0, len = props.companyData; i < len; i++) {
       const candidates = props.companyData[i].candidates;
       const companyName = props.companyData.companyName;
       for (let j = 0, len = props.candidates; j < len; j++) {
         const candidate = candidates[j];
-        const startTime = candidate.startTime;
-        const startTimeNewFmt = new Date(
-          0,
-          0,
-          0,
-          parseInt(startTime.split(":")[0]),
-          parseInt(startTime.split(":")[1])
-        );
-        const endTime = candidate.endTime;
-        const endTimeNewFmt = new Date(
-          0,
-          0,
-          0,
-          parseInt(endTime.split(":")[0]),
-          parseInt(endTime.split(":")[1])
-        );
-        const candidateName = candidate.candidateName;
-        this.data.append([
-          candidateName,
-          companyName,
-          startTimeNewFmt,
-          endTimeNewFmt
-        ]);
-      }
-    }
-    console.log(this.data);
-  }
-
-  //   componentDidMount() {
-  //     setInterval(() => {
-  //       this.setState({ refresh: Date.now() });
-  //     }, 1000);
-  //   }
-
-  render() {
-    const parseDataInFormat = companyData => {
-      const data = [];
-      //   console.log(companyData);
-      //   console.log(Object.keys(companyData));
-      const companyIds = Object.keys(companyData);
-      for (let i = 0, len = companyIds.length; i < len; i++) {
-        const companyId = companyIds[i];
-        // console.log(companyId);
-        // console.log(companyData[companyId]);
-        const candidates = companyData[companyId].candidates;
-        const companyName = companyId;
-        for (let j = 0, len = candidates.length; j < len; j++) {
-          const candidate = candidates[j];
+        if (candidate.candidateName) {
           const startTime = candidate.startTime;
           const startTimeNewFmt = new Date(
             0,
@@ -125,7 +77,7 @@ class TimelineChart extends React.Component {
             parseInt(endTime.split(":")[1])
           );
           const candidateName = candidate.candidateName;
-          data.push([
+          this.data.append([
             candidateName,
             companyName,
             startTimeNewFmt,
@@ -133,7 +85,53 @@ class TimelineChart extends React.Component {
           ]);
         }
       }
-      console.log(data);
+    }
+  }
+
+  render() {
+    const parseDataInFormat = companyData => {
+      const data = [];
+      //   console.log(companyData);
+      //   console.log(Object.keys(companyData));
+      const companyIds = Object.keys(companyData);
+      for (let i = 0, len = companyIds.length; i < len; i++) {
+        const companyId = companyIds[i];
+        // console.log(companyId);
+        // console.log(companyData[companyId]);
+        const candidates = companyData[companyId].candidates;
+        const companyName = companyId;
+        for (let j = 0, len = candidates.length; j < len; j++) {
+          const candidate = candidates[j];
+          if (candidate.candidateName) {
+            const startTime = candidate.startTime;
+            const startTimeNewFmt = new Date(
+              0,
+              0,
+              0,
+              parseInt(startTime.split(":")[0]),
+              parseInt(startTime.split(":")[1])
+            );
+            const endTime = candidate.endTime;
+            const endTimeNewFmt = new Date(
+              0,
+              0,
+              0,
+              parseInt(endTime.split(":")[0]),
+              parseInt(endTime.split(":")[1])
+            );
+            const candidateName = candidate.candidateName;
+            if (endTimeNewFmt > startTimeNewFmt && candidateName != "") {
+              data.push([
+                candidateName,
+                companyName,
+                startTimeNewFmt,
+                endTimeNewFmt
+              ]);
+            }
+          }
+        }
+      }
+      console.log("data", data);
       return data;
     };
 

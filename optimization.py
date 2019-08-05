@@ -1,5 +1,7 @@
 from __future__ import print_function
 import time
+import fire
+import json
 import collections
 import pickle
 from ortools.sat.python import cp_model
@@ -10,12 +12,23 @@ from config import INTERVIEW_INTERVAL, TIME_HORIZON,\
 
 
 def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
+    """
+        **Scheduling Engine**
+        This code solves a constraint optimization problem of scheduling. We have
+        two different data points one for profile and other for candidates.
+        Various Constraints are as follows:
+            - No Overlap condition for profiles as well as candidates
+            -
+
+    """
     # Create the model.
     model = cp_model.CpModel()
 
+    # Separate out profiles and candidates data
     profiles = schedule_data['profiles']
     candidates = schedule_data['candidates']
 
+    # Schedule Manager instance to manage all the data
     manager = ScheduleManager()
 
     for candidate_info in candidates:
@@ -25,6 +38,8 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
 
     for profile_info in profiles:
         profile_id = profile_info['profile_id']
+        allocated_interview_time = profile_info.get("allocated_interview_time",\
+                                        interview_interval)
         shortlisted_candidates = profile_info['shortlisted_candidates']
         interview_start_time = profile_info['interview_start_time']
 
@@ -49,7 +64,7 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
 
             if candidate_status == PENDING_STATUS:
 
-                unique_id = '%i_%i' % (profile_id, candidate_id)
+                unique_id = '%s_%s' % (profile_id, candidate_id)
 
                 start_time = model.NewIntVar(interview_start_time,
                                         TIME_HORIZON,
@@ -60,7 +75,7 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
                                       'end_' +  unique_id
                                       )
                 interval = model.NewIntervalVar(
-                            start_time, interview_interval, end_time,
+                            start_time, allocated_interview_time, end_time,
                             'interval_' +  unique_id
                         )
                 interview = Interview(candidate_id=candidate_id,
@@ -68,6 +83,7 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
                                       start_time=start_time,
                                       end_time=end_time,
                                       interval=interval,
+                                      allocated_interview_time=allocated_interview_time,
                                       status=candidate_status,
                                       rank=rank
                                       )
@@ -96,12 +112,13 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
     # Optimization value (for difference between expected start time and real start time)
     maxloss = 0
     all_scores = []
-    interval_constant = model.NewIntVar(interview_interval,
-                                        interview_interval,
-                                        name='interval')
+
 
     loss = []
     for profile_id, candidate_id, interview in manager.iterate_over_interviews():
+        interval_constant = model.NewIntVar(interview.allocated_interview_time,
+                                            interview.allocated_interview_time,
+                                            name='interval')
         maxloss += TIME_HORIZON
         unique_id = '%s_%s' %(profile_id, candidate_id)
         task_var = model.NewIntVar(-TIME_HORIZON, TIME_HORIZON,
@@ -165,7 +182,6 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
             interviews = candidate_rank_dict[rank]
             if len(interviews) == 1:
                 continue
-            print(candidate_id, rank)
             last_interview = interviews[0]
             for current_interview in interviews[1:]:
                 model.Add(last_interview.start_time < current_interview.start_time)
@@ -202,8 +218,14 @@ def optimize_schedule(schedule_data, interview_interval=INTERVIEW_INTERVAL):
     else:
         return {}
 
-if __name__ == '__main__':
+def main(file_path, output_file="output.json"):
+    """
 
-    import json
-    data = json.load(open("data/sample_data.json"))
-    optimize_schedule(data)
+    """
+    data = json.load(open(file_path))
+    output = json.dumps(optimize_schedule(data), indent=4)
+    with open(output_file, "w") as file_:
+        file_.write(output)
+
+if __name__ == '__main__':
+    fire.Fire(main)

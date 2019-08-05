@@ -1,18 +1,34 @@
 from collections import defaultdict
 
 class ScheduleManager():
+    """
+        Class for managing candidates and profiles both. Supports some functions
+        which are commonaly used during optimization
+    """
     def __init__(self):
+        """
+            Intialize dict for profiles, candidates and interviews
+        """
         self.profiles = {}
         self.candidates = {}
         self.interviews = {}
 
     def add_profile(self, job_profile):
+        """
+            Add Profile to profiles data
+        """
         self.profiles[job_profile.profile_id] = job_profile
 
     def add_candidate(self, candidate):
+        """
+            Add Candidates to candidates data
+        """
         self.candidates[candidate.candidate_id] = candidate
 
     def add_interview(self, interview):
+        """
+            Add an interview to interview data
+        """
         profile_id = interview.profile_id
         candidate_id = interview.candidate_id
 
@@ -22,6 +38,9 @@ class ScheduleManager():
         self.interviews[profile_id, candidate_id] = interview
 
     def iterate_over_interviews(self):
+        """
+            Iterate over all interviews, needed while adding constraints
+        """
         for (profile_id, candidate_id), interview in self.interviews.items():
             yield profile_id, candidate_id, interview
 
@@ -43,20 +62,12 @@ class JobProfile():
     def get_interview(self, candidate_id):
         return self.interviews[candidate_id]
 
-    # def get_rank(self, candidate_id ):
-    #     # Count the number of high ranking candidate before him
-    #     candidate_rank = self.get_interview(candidate_id).rank
-    #     count = 0
-    #     for interview in self.interviews.values():
-    #         if interview.rank < candidate_rank:
-    #             count += 1
-    #     return count
-
 
 
 class Interview():
     def __init__(self, profile_id, candidate_id,
-                 start_time, end_time, interval, status, rank):
+                 start_time, end_time, interval, allocated_interview_time,
+                 status, rank):
         """
         :params:
         # TODO Add description
@@ -65,6 +76,7 @@ class Interview():
         self.candidate_id = candidate_id
         self.end_time = end_time
         self.start_time = start_time
+        self.allocated_interview_time = allocated_interview_time
         self.status = status
         self.rank = rank
         self.interval = interval

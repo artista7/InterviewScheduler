@@ -7,6 +7,7 @@ export const CHANGE_CANDIDATE_NAME = "CHANGE_CANDIDATE_NAME";
 export const CHANGE_CANDIDATE_STATUS = "CHANGE_CANDIDATE_STATUS";
 export const ADD_CANDIDATE = "ADD_CANDIDATE";
 export const UPDATE_OPTIMIZED_STATE = "UPDATE_OPTIMIZED_STATE";
+export const UPDATE_CANDIDATE_PREFERENCE = "UPDATE_CANDIDATE_PREFERENCE";
 
 export const addCompany = () => ({ type: ADD_COMPANY });
 
@@ -16,7 +17,7 @@ export const addCandidate = companyId => ({
 });
 
 export const changeCompanyStartTime = (companyId, companyStartTime) => ({
-  type: ADD_COMPANY,
+  type: CHANGE_COMPANY_START_TIME,
   companyId: companyId,
   companyStartTime: companyStartTime
 });
@@ -61,4 +62,13 @@ export const toggleCandidateDisplay = companyId => ({
 export const updateOptimizedState = optimizedState => ({
   type: UPDATE_OPTIMIZED_STATE,
   optimizedState: optimizedState
+});
+
+export const updateCandidatePreferences = (
+  candidateId,
+  candidatePreference
+) => ({
+  type: UPDATE_CANDIDATE_PREFERENCE,
+  candidateId: candidateId,
+  candidatePreference: candidatePreference
 });

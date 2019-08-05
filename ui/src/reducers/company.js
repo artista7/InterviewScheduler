@@ -8,7 +8,8 @@ import {
   CHANGE_CANDIDATE_START_TIME,
   CHANGE_CANDIDATE_END_TIME,
   CHANGE_CANDIDATE_STATUS,
-  CHANGE_CANDIDATE_NAME
+  CHANGE_CANDIDATE_NAME,
+  UPDATE_OPTIMIZED_STATE
 } from "../actions";
 
 const initialState = {
@@ -25,9 +26,9 @@ const initialCompanyState = {
 };
 
 const initialCandidateState = {
-  startTime: "06:00",
-  endTime: "06:00",
-  status: 3,
+  startTime: "00:00",
+  endTime: "00:00",
+  status: 1,
   candidateName: ""
 };
 
@@ -83,7 +84,11 @@ export const companies = (state = initialState.companies, action) => {
     }
     case CHANGE_COMPANY_START_TIME: {
       const { companyId, newCompanyStartTime } = action;
-      const company = { ...state[companyId], startTime: newCompanyStartTime };
+      console.log(companyId);
+      const company = {
+        ...state[companyId],
+        companyStartTime: newCompanyStartTime
+      };
       return {
         ...state,
         [companyId]: company
@@ -128,6 +133,34 @@ export const companies = (state = initialState.companies, action) => {
         ...state
       });
 
+      return newState;
+    }
+    case UPDATE_OPTIMIZED_STATE: {
+      const { optimizedState } = action;
+      let newState = { ...state };
+      let companyId;
+      Object.keys(optimizedState).map(companyId => {
+        // Update Start time
+        const candidates = newState[companyId].candidates;
+        const newCandidates = [];
+        console.log(candidates, companyId);
+        candidates.map(candidate => {
+          // Update start time
+          const candidateName = candidate.candidateName;
+          const newCandidate = {
+            ...candidate,
+            startTime: optimizedState[companyId][candidateName].startTime,
+            endTime: optimizedState[companyId][candidateName].endTime
+          };
+          newCandidates.push(newCandidate);
+        });
+        const companyData = {
+          ...newState[companyId],
+          candidates: newCandidates
+        };
+        newState = { ...newState, [companyId]: companyData };
+      });
+      console.log("Newstate", newState);
       return newState;
     }
     default:

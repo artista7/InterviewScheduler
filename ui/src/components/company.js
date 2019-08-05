@@ -179,6 +179,8 @@ class CompanyInfo extends Component {
   }
 }
 
+const MappedCompanyInfo = connect()(CompanyInfo);
+
 class Company extends Component {
   constructor(props) {
     super(props);
@@ -191,7 +193,8 @@ class Company extends Component {
           margin: "10px auto"
         }}
       >
-        <CompanyInfo
+        <MappedCompanyInfo
+          companyId={this.props.companyId}
           companyStartTime={this.props.companyStartTime}
           candidateBarVisibility={this.props.candidateBarVisibility}
           updateCandidateVisibility={() =>

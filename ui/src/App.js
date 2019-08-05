@@ -4,6 +4,7 @@ import "./App.css";
 import Company from "./components/company";
 import OptimizeButton from "./components/optimizeButton";
 import TimelineChart from "./components/timelineChart";
+import CandidatePrioritySelector from "./components/candidatesTab";
 import { addCompany } from "./actions";
 
 import ReactDOM from "react-dom";
@@ -49,7 +50,29 @@ class App extends Component {
             <div style={{ margin: "auto" }}>Interview Scheduler</div>
           </div>
         </div>
-
+        <div style={{ width: "70%", margin: "auto" }}>
+          <div
+            style={{
+              display: "block",
+              fontFamily: "Barlow",
+              fontSize: "25px",
+              marginTop: "1.5rem",
+              color: "#795548d9",
+              fontWeight: "550"
+            }}
+          >
+            <div>Company Section</div>
+            <div style={{ width: "100%" }}>
+              <hr
+                style={{
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                  color: "#795548d9"
+                }}
+              />
+            </div>
+          </div>
+        </div>
         <div>
           {/* {Object.entries(this.props.companies).forEach(
             ([companyId, company]) => createCompany(companyId, company)
@@ -69,6 +92,32 @@ class App extends Component {
             <Icon style={{ marginLeft: "5px" }}>add</Icon>
           </Button>
           <OptimizeButton />
+        </div>
+        <div style={{ width: "70%", margin: "auto" }}>
+          <div
+            style={{
+              display: "block",
+              fontFamily: "Barlow",
+              fontSize: "25px",
+              marginTop: "1.5rem",
+              color: "#795548d9",
+              fontWeight: "550"
+            }}
+          >
+            <div> Candidate Section</div>
+            <div style={{ width: "100%" }}>
+              <hr
+                style={{
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                  color: "#795548d9"
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div style={{ width: "70%", display: "block", margin: "auto" }}>
+          <CandidatePrioritySelector />
         </div>
         <div style={{ width: "80%", display: "block", margin: "auto" }}>
           <TimelineChart />

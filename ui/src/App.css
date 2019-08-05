@@ -31,3 +31,28 @@
     transform: rotate(360deg);
   }
 }
+
+.top-nav-bar {
+  height: 90px;
+  background: #466368;
+  background: linear-gradient(
+    to right bottom,
+    rgb(63, 81, 181),
+    rgb(54, 63, 117)
+  );
+}
+
+.header-text-box {
+  text-align: center;
+  font-size: 200%;
+  font-family: Barlow, sans-serif;
+  color: #dddeff;
+  height: 100%;
+  display: flex;
+}
+
+.button-bar {
+  display: flex;
+  width: 30%;
+  margin: auto;
+}

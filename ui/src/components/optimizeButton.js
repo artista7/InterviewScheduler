@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
 import { connect } from "react-redux";
+import { updateOptimizedState } from "../actions";
 
-const getInSchema = data => {
+const getInSchema = (data, preferenceData) => {
   const newData = [];
   const candidatesMapping = {};
   const statusMapping = { 1: "PENDING", 2: "ONGOING", 3: "DONE" };
@@ -38,32 +39,78 @@ const getInSchema = data => {
     newData.push(newCompanyData);
   });
   const candidatePreference = [];
+  // const isNullPreferenceData =
+  //   Object.keys(preferenceData ? preferenceData : {}).length === 0;
+  // const iteratableData = isNullPreferenceData
+  //   ? candidatesMapping
+  //   : preferenceData;
+  // console.log("iteratableData", candidatesMapping);
+  // console.log(
+  //   "iteratableData",
+  //   iteratableData,
+  //   preferenceData,
+  //   preferenceData != {}
+  // );
+
   Object.keys(candidatesMapping).map(candidateName => {
     candidatePreference.push({
       candidate_id: candidateName,
-      profile_preference: candidatesMapping[[candidateName]]
+      profile_preference: preferenceData[candidateName]
+        ? preferenceData[candidateName]
+        : candidatesMapping[candidateName]
     });
   });
   return { profiles: newData, candidates: candidatePreference };
 };
 
-export const OptimizeButton = props => {
+const getOutSchema = data => {
+  const newData = {};
+  const timeTransformer = time => {
+    const hour = ("0" + parseInt(time / 60)).slice(-2);
+    const minutes = ((time % 60) + "00").slice(0, 2);
+    const finalTime = hour + ":" + minutes;
+    return finalTime;
+  };
+  console.log(data);
+  data.profiles.forEach(profileData => {
+    const profileId = profileData["profile_id"];
+    const schedule = profileData["schedule"];
+    const newCompanyData = {};
+    schedule.map(newSchedule => {
+      const candidateId = newSchedule["candidate_id"];
+      newCompanyData[candidateId] = {
+        endTime: timeTransformer(newSchedule.end_time),
+        startTime: timeTransformer(newSchedule.start_time)
+      };
+    });
+
+    newData[profileId] = newCompanyData;
+  });
+  return newData;
+};
+
+const OptimizeButton = props => {
+  const [state, setState] = useState([]);
+
   const clickHandler = event => {
-    const newData = getInSchema(props.companyData);
+    const newData = getInSchema(props.companyData, props.candidatePreferences);
+    const outputData = {};
     fetch(
-      "http://scheduleoptimizer-dev.us-east-1.elasticbeanstalk.com/optimize",
+      "http://localhost:5000/optimize",
       {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        method: "PUT",
+        method: "POST",
         body: JSON.stringify(newData)
       }
-    ).then(response => {
-      console.log(response.json());
-    });
-    console.log(newData);
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log(getOutSchema(data));
+        props.dispatch(updateOptimizedState(getOutSchema(data)));
+      });
   };
 
   return (
@@ -82,7 +129,8 @@ export const OptimizeButton = props => {
 
 const mapStateToProps = store => {
   return {
-    companyData: store.companies
+    companyData: store.companies,
+    candidatePreferences: store.candidates
   };
 };
 

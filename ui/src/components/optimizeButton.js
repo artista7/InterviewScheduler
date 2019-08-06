@@ -96,7 +96,7 @@ const OptimizeButton = props => {
     const newData = getInSchema(props.companyData, props.candidatePreferences);
     const outputData = {};
     fetch(
-      "http://localhost:5000/optimize",
+      "api/optimize",
       {
         headers: {
           Accept: "application/json",
